@@ -16,23 +16,29 @@ limitations under the License.
 
 package com.yahoo.mobile.client.android.util.rangeseekbar;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 
 import com.yahoo.mobile.client.android.util.BitmapUtil;
@@ -118,6 +124,11 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     private int mActiveColor;
     private int mDefaultColor;
 
+    private float mLightSourceY;
+    private float mAssumedItemX;
+    private Float mMinThumbCenter;
+    private Float mMaxThumbCenter;
+
     public RangeSeekBar(Context context) {
         super(context);
         init(context, null);
@@ -149,6 +160,9 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     }
 
     private void init(Context context, AttributeSet attrs) {
+        mLightSourceY = PixelUtil.dpToPx(context, 60);
+        mAssumedItemX = PixelUtil.dpToPx(context, 96);
+
         float barHeight;
         int thumbNormal = R.drawable.seek_thumb_normal;
         int thumbPressed = R.drawable.seek_thumb_pressed;
@@ -497,7 +511,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
             width = MeasureSpec.getSize(widthMeasureSpec);
         }
 
-        int height = thumbImage.getHeight() + (!mShowTextAboveThumbs ? 0 : PixelUtil.dpToPx(getContext(), HEIGHT_IN_DP));
+        int height = thumbImage.getHeight() + getHeightForText() + getHeightForShadow();
         if (MeasureSpec.UNSPECIFIED != MeasureSpec.getMode(heightMeasureSpec)) {
             height = Math.min(height, MeasureSpec.getSize(heightMeasureSpec));
         }
@@ -549,13 +563,22 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
         // draw minimum thumb if not a single thumb control
         if (!mSingleThumb) {
-            drawThumb(normalizedToScreen(normalizedMinValue), Thumb.MIN.equals(pressedThumb), canvas,
+
+            mMinThumbCenter = normalizedToScreen(normalizedMinValue);
+
+            drawThumb(mMinThumbCenter, Thumb.MIN.equals(pressedThumb), canvas,
                       selectedValuesAreDefault);
         }
 
         // draw maximum thumb
-        drawThumb(normalizedToScreen(normalizedMaxValue), Thumb.MAX.equals(pressedThumb), canvas,
+        mMaxThumbCenter = normalizedToScreen(normalizedMaxValue);
+        drawThumb(mMaxThumbCenter, Thumb.MAX.equals(pressedThumb), canvas,
                 selectedValuesAreDefault);
+
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setOutlineProvider(new RangeSeekBarOutlineProvider());
+        }
 
         // draw the text if sliders have moved from default edges
         if (mShowTextAboveThumbs && !selectedValuesAreDefault) {
@@ -731,6 +754,25 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         }
     }
 
+    private int getHeightForText() {
+        return !mShowTextAboveThumbs ? 0 : PixelUtil.dpToPx(getContext(), HEIGHT_IN_DP);
+    }
+
+    private int getHeightForShadow() {
+        int returnVal = 0;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            float elevation = getElevation();
+            float vertDistance = mLightSourceY - elevation;
+            double hypotheneus = Math.sqrt(Math.pow(vertDistance, 2) + Math.pow(mAssumedItemX, 2));
+            double sin = vertDistance/hypotheneus;
+            double angle = Math.asin(sin);
+            double tan = Math.tan(angle);
+            double blah = mLightSourceY /tan;
+            returnVal = (int) Math.round(blah - mAssumedItemX);
+        }
+        return returnVal;
+    }
+
     /**
      * Callback listener interface to notify about changed range values.
      *
@@ -803,4 +845,30 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private class RangeSeekBarOutlineProvider
+      extends ViewOutlineProvider {
+
+        @Override
+        public void getOutline(View view, Outline outline) {
+            RangeSeekBar castView = (RangeSeekBar) view;
+            if(castView != null && castView.mMaxThumbCenter != null) {
+                Path path = new Path();
+                int bottom = (int)(2*castView.mThumbHalfHeight) + getHeightForText();
+
+                int maxThumbLeft = (int)(castView.mMaxThumbCenter - castView.mThumbHalfWidth);
+                int maxThumbRight = (int)(castView.mMaxThumbCenter + castView.mThumbHalfWidth);
+                path.addOval(maxThumbLeft, mTextOffset, maxThumbRight, bottom, Path.Direction.CW);
+
+                if(castView.mMinThumbCenter != null) {
+//                    int minThumbLeft = (int)(castView.mMinThumbCenter - castView.mThumbHalfWidth);
+//                    int minThumbRight = (int)(castView.mMinThumbCenter + castView.mThumbHalfWidth);
+//                    path.addOval(minThumbLeft, mTextOffset, minThumbRight, bottom, Path.Direction.CW);
+                }
+
+                outline.setConvexPath(path);
+
+            }
+        }
+    }
 }

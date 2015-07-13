@@ -1,94 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:rsb="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+            xmlns:rsb="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="12dp">
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Range seek bar initialized in code with ranges set" />
+            android:text="Range seek bar initialized in code with ranges set"/>
 
         <LinearLayout
             android:id="@+id/seekbar_placeholder"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"/>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Range seek bar from xml with default range" />
+            android:text="Range seek bar from xml with default range"/>
 
         <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            rsb:thumbDisabled="@drawable/slider_thumb"
+            rsb:thumbNormal="@drawable/slider_thumb"
+            rsb:thumbPressed="@drawable/slider_thumb"/>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Range seek bar from xml with ranges set" />
+            android:text="Range seek bar from xml with ranges set"/>
 
         <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             rsb:absoluteMaxValue="150"
-            rsb:absoluteMinValue="20" />
+            rsb:absoluteMinValue="20"
+            rsb:thumbDisabled="@drawable/slider_thumb"
+            rsb:thumbNormal="@drawable/slider_thumb"
+            rsb:thumbPressed="@drawable/slider_thumb"/>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Range seek bar from xml with ranges set and double values" />
+            android:text="Range seek bar from xml with ranges set and double values"/>
 
         <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             rsb:absoluteMaxValue="140.54"
-            rsb:absoluteMinValue="15.23" />
+            rsb:absoluteMinValue="15.23"
+            rsb:thumbDisabled="@drawable/slider_thumb"
+            rsb:thumbNormal="@drawable/slider_thumb"
+            rsb:thumbPressed="@drawable/slider_thumb"/>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Range seek bar from xml with single thumb to true" />
+            android:text="Range seek bar from xml with single thumb to true"/>
 
         <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             rsb:absoluteMaxValue="150"
             rsb:absoluteMinValue="20"
-            rsb:singleThumb="true" />
+            rsb:singleThumb="true"
+            rsb:thumbDisabled="@drawable/slider_thumb"
+            rsb:thumbNormal="@drawable/slider_thumb"
+            rsb:thumbPressed="@drawable/slider_thumb"/>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Range seek bar from xml with custom thumb handle" />
+            android:text="Range seek bar from xml with custom thumb handle"/>
 
         <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             rsb:absoluteMaxValue="150"
             rsb:absoluteMinValue="20"
-            rsb:thumbDisabled="@mipmap/ic_launcher"
-            rsb:thumbNormal="@mipmap/ic_launcher"
-            rsb:thumbPressed="@mipmap/ic_launcher" />
+            rsb:thumbDisabled="@drawable/slider_thumb"
+            rsb:thumbNormal="@drawable/slider_thumb"
+            rsb:thumbPressed="@drawable/slider_thumb"/>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Range seek bar from xml with no text above" />
+            android:text="Range seek bar from xml with no text above"/>
 
         <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             rsb:absoluteMaxValue="150"
             rsb:absoluteMinValue="20"
-            rsb:valuesAboveThumbs="false" />
+            rsb:thumbDisabled="@drawable/slider_thumb"
+            rsb:thumbNormal="@drawable/slider_thumb"
+            rsb:thumbPressed="@drawable/slider_thumb"
+            rsb:valuesAboveThumbs="false"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Range seek bar from xml with thumb shadow"/>
+
+        <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            rsb:absoluteMaxValue="150"
+            rsb:absoluteMinValue="20"
+            rsb:thumbDisabled="@drawable/slider_thumb"
+            rsb:thumbNormal="@drawable/slider_thumb"
+            rsb:thumbPressed="@drawable/slider_thumb"
+            rsb:valuesAboveThumbs="false"/>
 
     </LinearLayout>
 
